@@ -90,14 +90,13 @@ class HeaderSigner(Signer):
 
         The signature must be interpolated into the template to get the final Authorization header value.
         """
-        param_map = {'keyId': key_id,
-                     'algorithm': algorithm,
-                     'signature': '%s'}
+        params = ['keyId="{}"'.format(key_id),
+                  'algorithm="{}"'.format(algorithm)]
         if headers:
             headers = [h.lower() for h in headers]
-            param_map['headers'] = ' '.join(headers)
-        kv = map('{0[0]}="{0[1]}"'.format, param_map.items())
-        kv_string = ','.join(kv)
+            params.append('headers="{}"'.format(' '.join(headers)))
+        params.append('signature="%s"')
+        kv_string = ','.join(params)
         sig_string = 'Signature {0}'.format(kv_string)
         return sig_string
 

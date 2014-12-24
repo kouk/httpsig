@@ -4,6 +4,7 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 import json
+import mock
 import unittest
 
 import httpsig.sign as sign
@@ -54,7 +55,7 @@ class TestSign(unittest.TestCase):
             'Content-Length': '18',
         }
         signed = hs.sign(unsigned, method='POST', path='/foo?param=value&pet=dog')
-        
+
         self.assertIn('Date', signed)
         self.assertEqual(unsigned['Date'], signed['Date'])
         self.assertIn('Authorization', signed)
@@ -67,3 +68,54 @@ class TestSign(unittest.TestCase):
         self.assertEqual(params['algorithm'], 'rsa-sha256')
         self.assertEqual(params['headers'], '(request-target) host date content-type content-md5 content-length')
         self.assertEqual(params['signature'], 'G8/Uh6BBDaqldRi3VfFfklHSFoq8CMt5NUZiepq0q66e+fS3Up3BmXn0NbUnr3L1WgAAZGplifRAJqp2LgeZ5gXNk6UX9zV3hw5BERLWscWXlwX/dvHQES27lGRCvyFv3djHP6Plfd5mhPWRkmjnvqeOOSS0lZJYFYHJz994s6w=')
+
+
+class TestHMACSHA256(unittest.TestCase):
+    def setUp(self):
+        from httpsig.algorithms.hmac import HMACSHA256
+        self.test_class = HMACSHA256
+        self.test_secret = b'secret'
+        self.test_data = 'Message'
+
+    def tearDown(self):
+        self.test_class = None
+
+    def test_meta(self):
+        self.assertEquals(self.test_class.algorithm_name, 'hmac')
+        self.assertEquals(self.test_class.hash_name, 'sha256')
+
+    def test_value(self):
+        test_obj = self.test_class(self.test_secret)
+        self.assertEquals(
+            test_obj.create_signature(self.test_data),
+            'qnR8UCqJggD55PohusaBNviGoOJ67HC6Btry4qXLVZc=',
+        )
+
+
+class TestRSASHA256(unittest.TestCase):
+    def setUp(self):
+        from httpsig.algorithms.rsa import RSASHA256
+        self.test_class = RSASHA256
+        self.test_data = '(request-target): post /foo?param=value&pet=dog\n' + \
+            'host: example.com\n' + \
+            'date: Thu, 05 Jan 2012 21:31:40 GMT\n' + \
+            'content-type: application/json\n' + \
+            'content-md5: Sd/dVLAcvNLSq16eXua5uQ==\ncontent-length: 18'
+
+    def tearDown(self):
+        self.test_class = None
+
+    def test_meta(self):
+        self.assertEquals(self.test_class.algorithm_name, 'rsa')
+        self.assertEquals(self.test_class.hash_name, 'sha256')
+
+    def test_value(self):
+        key_path = os.path.join(os.path.dirname(__file__), 'rsa_private.pem')
+        key = open(key_path, 'rb').read()
+        test_obj = self.test_class(key)
+        self.assertEquals(
+            test_obj.create_signature(self.test_data),
+            'G8/Uh6BBDaqldRi3VfFfklHSFoq8CMt5NUZiepq0q66e+fS3Up3BmXn0NbUnr3L' + \
+            '1WgAAZGplifRAJqp2LgeZ5gXNk6UX9zV3hw5BERLWscWXlwX/dvHQES27lGRCvy' + \
+            'Fv3djHP6Plfd5mhPWRkmjnvqeOOSS0lZJYFYHJz994s6w='
+        )

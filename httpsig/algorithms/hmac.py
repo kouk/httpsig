@@ -54,7 +54,7 @@ class HMACSHA512(BaseHMACAlgorithm):
 
     def __init__(self, secret):
         """
-        An algorithm to sign messages with HMAC using SHA-256.
+        An algorithm to sign messages with HMAC using SHA-512.
 
         Args:
           secret (bytes): A shared HMAC secret.

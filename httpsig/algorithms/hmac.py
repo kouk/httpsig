@@ -40,7 +40,7 @@ class HMACSHA256(BaseHMACAlgorithm):
         Example Usage:
         >>> secret = b'secret'
         >>> from httpsig.algorithms.hmac import HMACSHA256
-        >>> HMACSHA256(b'secret').create_signature('Message')
+        >>> HMACSHA256(secret).create_signature('Message')
         'qnR8UCqJggD55PohusaBNviGoOJ67HC6Btry4qXLVZc='
         """
         self.secret = secret

@@ -114,6 +114,29 @@ class TestHMACSHA256(unittest.TestCase):
         )
 
 
+class TestHMACSHA512(unittest.TestCase):
+    def setUp(self):
+        from httpsig.algorithms.hmac import HMACSHA512
+        self.test_class = HMACSHA512
+        self.test_secret = b'secret'
+        self.test_data = 'Message'
+
+    def tearDown(self):
+        self.test_class = None
+
+    def test_meta(self):
+        self.assertEquals(self.test_class.algorithm_name, 'hmac')
+        self.assertEquals(self.test_class.hash_name, 'sha512')
+
+    def test_value(self):
+        test_obj = self.test_class(self.test_secret)
+        self.assertEquals(
+            test_obj.create_signature(self.test_data),
+            'z12KOCXYQjCZyKf6WP+yYBONCS+IwNuv9oPbRcL4u+WetE4BvAm1Ysy+bEyGxq/' + \
+            'QDLAufO0sPnVLUl/ubvPGdQ=='
+        )
+
+
 class TestRSASHA256(unittest.TestCase):
     def setUp(self):
         from httpsig.algorithms.rsa import RSASHA256

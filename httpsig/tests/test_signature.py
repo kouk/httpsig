@@ -137,6 +137,31 @@ class TestHMACSHA512(unittest.TestCase):
         )
 
 
+class TestRSASHA1(unittest.TestCase):
+    def setUp(self):
+        from httpsig.algorithms.rsa import RSASHA1
+        self.test_class = RSASHA1
+        self.test_data = 'Message'
+
+    def tearDown(self):
+        self.test_class = None
+
+    def test_meta(self):
+        self.assertEquals(self.test_class.algorithm_name, 'rsa')
+        self.assertEquals(self.test_class.hash_name, 'sha1')
+
+    def test_value(self):
+        key_path = os.path.join(os.path.dirname(__file__), 'rsa_private.pem')
+        key = open(key_path, 'rb').read()
+        test_obj = self.test_class(key)
+        self.assertEquals(
+            test_obj.create_signature(self.test_data),
+            'hBQDzQoGiaH+jdOGU/bIr8uhXiQPSn3qJFzssx8qVwdn+d' + \
+            'czeOgLMo7yo4i+gvVNT38CSsDy1v68jqLV78CMKfAD7CfZ' + \
+            'wnPTjsjAmuC9a72XWkTul8s2m7KYB7CfaugSgkBTdgaw/u' + \
+            'WTvnDSt1ebSklOHjEB1+Ye6nRsoxQIqFM='
+        )
+
 class TestRSASHA256(unittest.TestCase):
     def setUp(self):
         from httpsig.algorithms.rsa import RSASHA256

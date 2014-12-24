@@ -70,6 +70,28 @@ class TestSign(unittest.TestCase):
         self.assertEqual(params['signature'], 'G8/Uh6BBDaqldRi3VfFfklHSFoq8CMt5NUZiepq0q66e+fS3Up3BmXn0NbUnr3L1WgAAZGplifRAJqp2LgeZ5gXNk6UX9zV3hw5BERLWscWXlwX/dvHQES27lGRCvyFv3djHP6Plfd5mhPWRkmjnvqeOOSS0lZJYFYHJz994s6w=')
 
 
+class TestHMACSHA1(unittest.TestCase):
+    def setUp(self):
+        from httpsig.algorithms.hmac import HMACSHA1
+        self.test_class = HMACSHA1
+        self.test_secret = b'secret'
+        self.test_data = 'Message'
+
+    def tearDown(self):
+        self.test_class = None
+
+    def test_meta(self):
+        self.assertEquals(self.test_class.algorithm_name, 'hmac')
+        self.assertEquals(self.test_class.hash_name, 'sha1')
+
+    def test_value(self):
+        test_obj = self.test_class(self.test_secret)
+        self.assertEquals(
+            test_obj.create_signature(self.test_data),
+            'gPQlziBEGEZE+Fq7plW/qziLdqc='
+        )
+
+
 class TestHMACSHA256(unittest.TestCase):
     def setUp(self):
         from httpsig.algorithms.hmac import HMACSHA256

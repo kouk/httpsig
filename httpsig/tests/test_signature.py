@@ -162,6 +162,7 @@ class TestRSASHA1(unittest.TestCase):
             'WTvnDSt1ebSklOHjEB1+Ye6nRsoxQIqFM='
         )
 
+
 class TestRSASHA256(unittest.TestCase):
     def setUp(self):
         from httpsig.algorithms.rsa import RSASHA256
@@ -188,4 +189,29 @@ class TestRSASHA256(unittest.TestCase):
             'G8/Uh6BBDaqldRi3VfFfklHSFoq8CMt5NUZiepq0q66e+fS3Up3BmXn0NbUnr3L' + \
             '1WgAAZGplifRAJqp2LgeZ5gXNk6UX9zV3hw5BERLWscWXlwX/dvHQES27lGRCvy' + \
             'Fv3djHP6Plfd5mhPWRkmjnvqeOOSS0lZJYFYHJz994s6w='
+        )
+
+
+class TestRSASHA512(unittest.TestCase):
+    def setUp(self):
+        from httpsig.algorithms.rsa import RSASHA512
+        self.test_class = RSASHA512
+        self.test_data = 'Message'
+
+    def tearDown(self):
+        self.test_class = None
+
+    def test_meta(self):
+        self.assertEquals(self.test_class.algorithm_name, 'rsa')
+        self.assertEquals(self.test_class.hash_name, 'sha512')
+
+    def test_value(self):
+        key_path = os.path.join(os.path.dirname(__file__), 'rsa_private.pem')
+        key = open(key_path, 'rb').read()
+        test_obj = self.test_class(key)
+        self.assertEquals(
+            test_obj.create_signature(self.test_data),
+            'a9kYzF/IDzPQbYPvl92m5Cd40PCMUXMpg09IdLcS3Cfy1ZAeGBo5ZqNrJEqqdYS' + \
+            'Py9CJKJTIJLcWjdhXmyIDKH7Wo4dlcs15eOK2YuX10+RO5eJwNT8OXS83iQ3Xs7' + \
+            'U4W8hKe5EXKTzCdPH4HF3pV2SQsteYhoukMGcv6Bf71to='
         )

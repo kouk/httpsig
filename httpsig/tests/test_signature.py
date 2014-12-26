@@ -167,11 +167,7 @@ class TestRSASHA256(unittest.TestCase):
     def setUp(self):
         from httpsig.algorithms.rsa import RSASHA256
         self.test_class = RSASHA256
-        self.test_data = '(request-target): post /foo?param=value&pet=dog\n' + \
-            'host: example.com\n' + \
-            'date: Thu, 05 Jan 2012 21:31:40 GMT\n' + \
-            'content-type: application/json\n' + \
-            'content-md5: Sd/dVLAcvNLSq16eXua5uQ==\ncontent-length: 18'
+        self.test_data = 'Message'
 
     def tearDown(self):
         self.test_class = None
@@ -186,9 +182,9 @@ class TestRSASHA256(unittest.TestCase):
         test_obj = self.test_class(key)
         self.assertEquals(
             test_obj.create_signature(self.test_data),
-            'G8/Uh6BBDaqldRi3VfFfklHSFoq8CMt5NUZiepq0q66e+fS3Up3BmXn0NbUnr3L' + \
-            '1WgAAZGplifRAJqp2LgeZ5gXNk6UX9zV3hw5BERLWscWXlwX/dvHQES27lGRCvy' + \
-            'Fv3djHP6Plfd5mhPWRkmjnvqeOOSS0lZJYFYHJz994s6w='
+            'ryc5G6twWXkFnRZj3hrgFR3VCjhEAr0/m354d+RAfcVCXm6NA5jVPeC6DH05xT1Y' + \
+            'zdDWPNdsC6OaW7/mcdMN16EEAQwd7TK74QlTqvbbjy0lUST8yBVw1aTMSJIrYymC' + \
+            'yxskda128yTW2B+nXRfLiQPEB83TcTtHsB77Kh2H/1U='
         )
 
 

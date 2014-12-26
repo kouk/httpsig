@@ -83,11 +83,11 @@ class RSASHA256(BaseRSAlgorithm):
         b'lzUpOb1V4cScGd365tiSMvxLOvTA==' + \
         b'\n-----END RSA PRIVATE KEY-----\n'
         >>> from httpsig.algorithms.rsa import RSASHA256
-        >>> RSASHA256(key).create_signature('message')
-        'JkNlSFvftAv1VDPWc0KgIYPwePMch2IM4l8MdnWbzH/t4' + \
-        'LoJI9okZD3n8XM4kjzlaFu/bXJgPTzl7KySqupiiur8MGu' + \
-        'tQyoxka3a+eblGJ2gYqjRfNeYlqnnpcenieL6wTgKs+JDn' + \
-        'myKKB3wSvT/vbSwJ76GlB5AcJnbUnVIxME='
+        >>> RSASHA256(key).create_signature('Message')
+        'ryc5G6twWXkFnRZj3hrgFR3VCjhEAr0/m354d+RAfcVCXm' + \
+        '6NA5jVPeC6DH05xT1YzdDWPNdsC6OaW7/mcdMN16EEAQwd' + \
+        '7TK74QlTqvbbjy0lUST8yBVw1aTMSJIrYymCyxskda128y' + \
+        'TW2B+nXRfLiQPEB83TcTtHsB77Kh2H/1U='
         """
         self.secret = secret
         self._algorithm = RSA
